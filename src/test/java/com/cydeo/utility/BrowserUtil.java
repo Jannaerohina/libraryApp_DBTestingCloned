@@ -18,6 +18,7 @@ public class BrowserUtil {
      * Switches to new window by the exact title. Returns to original window if target title not found
      * @param targetTitle
      */
+
     public static void switchToWindow(String targetTitle) {
         String origin = Driver.getDriver().getWindowHandle();
         for (String handle : Driver.getDriver().getWindowHandles()) {
@@ -380,7 +381,7 @@ public class BrowserUtil {
 
     public static List<String> getAllSelectOptions(WebElement element){
 
-        Select select=new Select(element);
+        Select select = new Select(element);
 
         return getElementsText(select.getOptions());
     }

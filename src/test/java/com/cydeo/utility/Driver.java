@@ -36,7 +36,6 @@ public class Driver {
             String browserName = System.getProperty("browser") != null ? browserName = System.getProperty("browser") : ConfigurationReader.getProperty("browser");
 
 
-
             switch(browserName){
                 case "remote-chrome":
                     try {
@@ -92,6 +91,7 @@ public class Driver {
             driverPool.get().quit(); // this line will terminate the existing driver session. with using this driver will not be even null
             driverPool.remove();  //driver = null
         }
+
 
     }
 }

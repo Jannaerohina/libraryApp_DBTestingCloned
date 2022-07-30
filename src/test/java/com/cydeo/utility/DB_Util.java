@@ -348,7 +348,7 @@ public class DB_Util {
      */
     public static Map<String,String> getRowMap(int rowNum){
 
-        Map<String,String> rowMap = new LinkedHashMap<>();
+        Map <String,String> rowMap = new LinkedHashMap<>();
         int columnCount = getColumnCount() ;
 
         try{

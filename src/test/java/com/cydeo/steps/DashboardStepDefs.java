@@ -3,8 +3,11 @@ package com.cydeo.steps;
 import com.cydeo.pages.DashBoardPage;
 import com.cydeo.pages.LoginPage;
 import com.cydeo.utility.BrowserUtil;
+import com.cydeo.utility.DB_Util;
 import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.junit.Assert;
 
 public class DashboardStepDefs
 {
@@ -13,7 +16,6 @@ public class DashboardStepDefs
     String actualBorrowedBookNumbers;
     LoginPage loginPage=new LoginPage();
     DashBoardPage dashBoardPage=new DashBoardPage();
-
 
     @Given("the user logged in as {string}")
     public void the_user_logged_in_as(String user) {
@@ -29,6 +31,60 @@ public class DashboardStepDefs
         System.out.println("actualBookNumbers = " + actualBookNumbers);
         actualBorrowedBookNumbers = dashBoardPage.borrowedBooksNumber.getText();
         System.out.println("actualBorrowedBookNumbers = " + actualBorrowedBookNumbers);
+
+    }
+
+    @Then("the information should be same with database")
+    public void the_information_should_be_same_with_database() {
+
+        // 1. Make the connection
+        // DB_Util.createConnection();
+        // since we have Before After with custom hooks we don't need this step anymore
+
+        // USERS
+
+        // 2. Run a query
+        DB_Util.runQuery("select count(*) from users");
+
+        // 3. Store data
+        String expectedUsers = DB_Util.getFirstRowFirstColumn();
+        // DB_Util.getCellValue(1, 1); same
+
+
+        // 4. Make an assertion
+        Assert.assertEquals(expectedUsers, actualUserNumbers);
+
+        // BOOKS
+
+        // 2. Run a query
+        DB_Util.runQuery("select count(*) from books");
+
+        // 3. Store data
+        String expectedBooks = DB_Util.getFirstRowFirstColumn();
+        // DB_Util.getCellValue(1, 1); same
+
+
+        // 4. Make an assertion
+        Assert.assertEquals(expectedBooks, actualBookNumbers);
+
+        // BORROWED BOOKS
+
+        // 2. Run a query
+        DB_Util.runQuery("select count(*) from book_borrow where is_returned=0");
+
+        // 3. Store data
+        String expectedBorrowedBooks = DB_Util.getFirstRowFirstColumn();
+        // DB_Util.getCellValue(1, 1); same
+
+
+        // 4. Make an assertion
+        Assert.assertEquals(expectedBorrowedBooks, actualBorrowedBookNumbers);
+
+
+        // 5. Close a connection
+        // DB_Util.destroy();
+        // since we have Before After with custom hooks we don't need this step anymore
+
 
     }
 

@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class BooksStepDefs {
     BookPage bookPage=new BookPage();
-    List<String> actualCategoryList;
+    List <String> actualCategoryList;
 
 
     @When("the user navigates to {string} page")
@@ -32,7 +32,6 @@ public class BooksStepDefs {
     @Then("user should be able to see following categories")
     public void user_should_be_able_to_see_following_categories(List<String> expectedCategoryList) {
 
-
         Assert.assertEquals(expectedCategoryList, actualCategoryList);
 
     }
@@ -44,6 +43,61 @@ public class BooksStepDefs {
         System.out.println("bookName = " + bookName);
         BrowserUtil.waitForClickablility(bookPage.search, 5).sendKeys(bookName);
         BrowserUtil.waitForClickablility(bookPage.editBook(bookName), 5).click();
+
+    }
+
+    @Then("verify book categories must match book categories table from db")
+    public void verify_book_categories_must_match_book_categories_table_from_db() {
+
+        String query = "select name from book_categories";
+
+        DB_Util.runQuery(query);
+
+        // store data
+
+        List <String> expectedCategoryList = DB_Util.getColumnDataAsList(1);
+
+        Assert.assertEquals(expectedCategoryList, actualCategoryList);
+
+    }
+
+    @Then("book information must match the database for {string}")
+    public void book_information_must_match_the_database_for(String bookName) {
+
+        BrowserUtil.waitFor(1);
+
+        // get data from UI
+        String actualBookName = bookPage.bookName.getAttribute("value");
+        String actualAuthorName = bookPage.author.getAttribute("value");
+        String actualISBN = bookPage.isbn.getAttribute("value");
+        String actualYear = bookPage.year.getAttribute("value");
+        String actualDesc = bookPage.description.getAttribute("value");
+
+        System.out.println(actualBookName);
+        System.out.println(actualAuthorName);
+
+        // get related book info from DB
+
+            String query = "select name, author, isbn, description, year from books where name='"+ bookName +"'";
+
+            DB_Util.runQuery(query);
+
+        Map <String, String> rowMap = DB_Util.getRowMap(1);
+
+        String expectedName = rowMap.get("name");
+        String expectedAuthor = rowMap.get("author");
+        String expectedIsbn = rowMap.get("isbn");
+        String expectedDescription = rowMap.get("description");
+        String expectedYear = rowMap.get("year");
+
+        // Assertion
+
+        Assert.assertEquals(expectedName, actualBookName);
+        Assert.assertEquals(expectedAuthor, actualAuthorName);
+        Assert.assertEquals(expectedIsbn, actualISBN);
+        Assert.assertEquals(expectedDescription, actualDesc);
+        Assert.assertEquals(expectedYear, actualYear);
+
 
     }
 

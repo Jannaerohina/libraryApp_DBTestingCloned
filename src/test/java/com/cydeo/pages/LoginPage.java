@@ -22,8 +22,6 @@ public class LoginPage {
     @FindBy(tagName = "button")
     public WebElement loginButton;
 
-
-
     public void login(String userType){
 
         String username=ConfigurationReader.getProperty(userType+"_username");
